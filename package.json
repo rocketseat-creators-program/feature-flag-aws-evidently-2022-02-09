@@ -26,7 +26,10 @@
   },
   "homepage": "https://github.com/askmon/jwt-rocketseat#readme",
   "dependencies": {
+    "aws-sdk": "^2.1066.0",
+    "axios": "^0.25.0",
     "bcrypt": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
