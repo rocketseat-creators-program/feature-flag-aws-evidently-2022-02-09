@@ -1,12 +1,12 @@
-# [Template] Fundamentos de JWT para uma autenticação mais segura
+## Migrando para microsserviços usando feature flags no backend com AWS CloudWatch Evidently e Node.js
 
 <img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
 
-*Esse repositório não contém o código finalizado e sim o template para dar início à aula.*
+Quando estamos quebrando um monólito em vários microsserviços, muitas vezes queremos fazer isso de forma gradual, fazendo com que as requisições comecem a ir aos poucos para o microsserviço. Isso pode ser por vários motivos, como por exemplo, testar a escalabilidade, ver se todos os mappers estão corretos, fazer testes internos antes do rollout total...
 
-O JWT é amplamente utilizado como uma forma de autenticação, porém, se não tivermos o conhecimento necessário e aplicarmos algumas boas práticas, esta forma de autenticação pode ter falhas que comprometem a segurança das nossas aplicações e dos nossos dados.
+Uma técnica que pode ser usada para atingir tal objetivo é o uso de feature flags, dessa forma conseguimos ter o controle de quantas requisições itão para o nosso serviço,e, caso tudo dê errado, conseguimos desligar e ficarmos tranquilos enquanto investigamos o problema.
 
-Nesta aula implementamos uma autenticação do 0, vendo alguns erros comuns e, em pouco tempo, aplicamos algumas práticas que aumentam muito a segurança no nosso backend.
+Neste repositório está o código da aula sobre como implementar feature flags no backend com AWS CloudWatch Evidently. Na branch `main` você encontra o código inicial e na branch `complete` o código que teremos no final da aula.
 
 ## Expert
 
@@ -14,35 +14,18 @@ Nesta aula implementamos uma autenticação do 0, vendo alguns erros comuns e, e
 | :-: |
 |[André Spanguero Kanayama](https://github.com/askmon)|
 
-## Rodando o projeto
 
-Este projeto consiste de uma API feita em Node.js que consome um banco PostgreSQL. Há um arquivo `.nvmrc` no projeto caso queira realizar a instalação usando o [nvm](https://github.com/nvm-sh/nvm).
+### Requisitos
 
-Para rodar o projeto é necessário rodar um banco PostgreSQL, sugiro o uso do docker e docker-compose. O projeto já contém um arquivo do docker-compose, então basta usar o seguinte comando:
+- Node.js v14 (`.nvmrc` incluso no projeto)
+- Conta na AWS (utilizaremos o AWS CloudWatch Evidently)
+- Um banco PostgreSQL (existe um docker-compose no projeto, para quem quiser rodar usando Docker)
 
-`docker-compose up`
+### Como rodar
 
-Usei o dotenv para variáveis de ambiente, então pode-se renomear o arquivo `.env.example` para `.env` e aproveitar as variáveis de ambiente de lá. Por padrão elas apontam para o banco PostgreSQL so docker-compose.
-
-O próximo passo é instalar as depêndencias:
-
-`npm install`
-
-Depois é necessário rodar a migration para criar as tabelas no banco:
-
-`npm run sequelize:migrate`
-
-E então pode-se rodar com nodemon:
-
-`npm run dev`
-
-Para facilitar os testes dos endpoints, pode ser usado o arquivo `JWT.postman_collection.json`. Também utilizao bastante o debugger de JWT disponível [aqui](https://jwt.io/).
-
-## Comandos para criação de chaves privada e pública (testados no MacOS)
-
-```
-openssl genrsa -out private-key.pem 2048 
-openssl rsa -in private-key.pem -pubout -out public-key.pem
-```
-
-Caso queira usar chaves previamente geradas, copie o arquivo `.env.example` para o arquivo `.env`. Mas lembre-se: **Não** use essas chaves em produção, **apenas** para teste.
+0. Antes de tudo, rode o comando `npm install`;
+0. Caso queira rodar o banco localmente com Docker, pode-se utilizar o comando `docker-compose up` para subir o banco;
+0. Renomeie o arquivo `.env.example` para `.env` e edite as variáveis para conexão com o banco;
+0. Rode o comando `npm run sequelize:migrate` para gerar as tabelas;
+0. Rode o comando `npm run sequelize:seed` para criar dados de exemplo nas tabelas;
+0. Rode o comando `npm run dev` para rodar o projeto usando nodemon.
