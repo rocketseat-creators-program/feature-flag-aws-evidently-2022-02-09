@@ -1,7 +1,6 @@
 const Evidently = require('aws-sdk/clients/evidently')
 const R = require('ramda')
 const axios = require('axios')
-const { performance } = require('perf_hooks')
 
 const crypto = require('./crypto')
 const { User } = require('../models')
@@ -19,32 +18,22 @@ const getUsers = async userId => {
     feature: 'user-service',
     project: 'aula-1',
   }
-  const evaluationResult = await evidently.evaluateFeature(evaluateFeatureRequest).promise()
-  const isFeatureEnabled = evaluationResult.value.boolValue
 
-  let users = []
-  const startTime = performance.now()
+  const evaluationResult = await evidently
+    .evaluateFeature(evaluateFeatureRequest)
+    .promise()
+
+  const isFeatureEnabled = evaluationResult.value.boolValue
+  console.log(evaluationResult)
 
   if (isFeatureEnabled) {
-    users = await axios.get('http://127.0.0.1:3001/users').then(response => response.data)
-  } else {
-    users = await User
-      .findAll({})
-      .then(serializeUsers)
+    return axios.get('http://127.0.0.1:3001/users')
+      .then(response => response.data)
   }
 
-  await evidently.putProjectEvents({
-    project: 'aula-1',
-    events: [
-      {
-        timestamp: new Date(),
-        type: 'aws.evidently.custom',
-        data: { details: { loadTime: performance.now() - startTime }, userDetails: { userId: `${userId}` } },
-      },
-    ],
-  }).promise()
-
-  return users
+  return User
+    .findAll({})
+    .then(serializeUsers)
 }
 
 const createUser = user =>
@@ -63,3 +52,4 @@ module.exports = {
   createUser,
   findByEmail,
 }
+
